@@ -14,20 +14,33 @@ const Home: NextPageWithLayout = () => {
       <Flex py="3rem" gridColumn={APP_GRID_COLUMN} justify="center" my="auto">
         <Stack align="center" gap="1.25rem">
           <Text textStyle="responsive-display.heavy-1280" as="h1">
-            Building with{' '}
+            You are on the waitlist for {' '}
             <Text as="span" color="interaction.main.default">
               EduEDA
             </Text>
           </Text>
           <Text textStyle="body-1">
-            Start building for public good easily, and in minutes
+            You will receive an email once we have more features/releases. Check
+            out our repositories:
+            <Link
+              href="https://github.com/String-sg/education-digest-eda"
+              isExternal
+            >
+              education raw data
+            </Link>
+            and
+            <Link href="https://github.com/String-sg/eduEDA" isExternal>
+              code for this web-application
+            </Link>
+            .
           </Text>
+
           <Button
             as={Link}
-            href="https://start.open.gov.sg/docs/preface"
+            href="https://string.beta.gov.sg"
             target="_blank"
           >
-            Get started
+            See other String products
           </Button>
           <StarterKitSvgr />
         </Stack>
