@@ -217,13 +217,23 @@ const LandingPage = () => {
                   },
                   y: {
                     beginAtZero: true,
-                    max: roundToNearestPowerOfTen(
-                      Math.max(...chartData.datasets[0].data),
-                    ),
+                    max:
+                      chartData &&
+                      chartData.datasets &&
+                      chartData.datasets[0]?.data
+                        ? roundToNearestPowerOfTen(
+                            Math.max(...chartData.datasets[0].data),
+                          )
+                        : 0, // Default to 0 if data is undefined
                     ticks: {
-                      stepSize: calculateStepSize(
-                        Math.max(...chartData.datasets[0].data),
-                      ),
+                      stepSize:
+                        chartData &&
+                        chartData.datasets &&
+                        chartData.datasets[0]?.data
+                          ? calculateStepSize(
+                              Math.max(...chartData.datasets[0].data),
+                            )
+                          : 10, // Default step size if data is undefined
                     },
                     title: {
                       display: true,
