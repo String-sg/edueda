@@ -1,3 +1,3 @@
 export const AppFooter = () => {
-  return <></> 
+  return <></>
 }

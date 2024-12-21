@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import Image from 'next/image'
 import NextLink from 'next/link'
 import { Box, Flex, Select, Stack, Text } from '@chakra-ui/react'
 import { Button, useIsMobile } from '@opengovsg/design-system-react'
@@ -11,7 +10,9 @@ import {
   LinearScale,
   Title,
   Tooltip,
+  type ChartData,
 } from 'chart.js'
+// Use type-only import
 import Papa from 'papaparse'
 import { Bar } from 'react-chartjs-2'
 
@@ -30,58 +31,75 @@ import {
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+interface TeacherDataRow {
+  Year?: string
+  'Age Group'?: string
+  'Primary Total'?: string
+  'Primary Female'?: string
+  'Secondary Total'?: string
+  'Secondary Female'?: string
+  'Pre-University Total'?: string
+  'Pre-University Female'?: string
+  'Overall Total'?: string
+  'Overall Female'?: string
+}
+
+type ChartDataType = ChartData<'bar', number[], string>
 
 const LandingPage = () => {
   const isMobile = useIsMobile()
-  const [chartData, setChartData] = useState<any>(null)
+  const [chartData, setChartData] = useState<ChartDataType | null>(null)
   const [selectedAgeGroup, setSelectedAgeGroup] = useState('All')
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/data/teachers_age_data_2019_2023.csv') // Corrected path
+        const response = await fetch('/data/teachers_age_data_2019_2023.csv')
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
         const csvText = await response.text()
-        const parsed = Papa.parse(csvText, { header: true })
+        const parsed = Papa.parse<TeacherDataRow>(csvText, { header: true })
         const data = parsed.data.map((row) => {
-          // Helper function to safely parse numbers
-          const safeParse = (value) => {
+          const safeRow = row as TeacherDataRow
+
+          const safeParse = (value: string | undefined): number => {
             return value && typeof value === 'string'
               ? parseInt(value.replace(/,/g, ''), 10)
               : 0
           }
 
-          // Remove commas and convert numeric columns to numbers
           return {
-            ...row,
-            'Primary Total': safeParse(row['Primary Total']),
-            'Primary Female': safeParse(row['Primary Female']),
-            'Secondary Total': safeParse(row['Secondary Total']),
-            'Secondary Female': safeParse(row['Secondary Female']),
-            'Pre-University Total': safeParse(row['Pre-University Total']),
-            'Pre-University Female': safeParse(row['Pre-University Female']),
-            'Overall Total': safeParse(row['Overall Total']),
-            'Overall Female': safeParse(row['Overall Female']),
+            ...safeRow,
+            'Primary Total': safeParse(safeRow['Primary Total']),
+            'Primary Female': safeParse(safeRow['Primary Female']),
+            'Secondary Total': safeParse(safeRow['Secondary Total']),
+            'Secondary Female': safeParse(safeRow['Secondary Female']),
+            'Pre-University Total': safeParse(safeRow['Pre-University Total']),
+            'Pre-University Female': safeParse(
+              safeRow['Pre-University Female'],
+            ),
+            'Overall Total': safeParse(safeRow['Overall Total']),
+            'Overall Female': safeParse(safeRow['Overall Female']),
           }
         })
 
-        console.log('Parsed Data:', data) // Debugging output
-
-        // Rest of the processing logic
         const filteredData = data.filter((d) => {
           return (
             selectedAgeGroup === 'All' || d['Age Group'] === selectedAgeGroup
           )
         })
 
-        const groupedData = filteredData.reduce((acc, curr) => {
-          const year = curr.Year
-          acc[year] = (acc[year] || 0) + curr['Overall Total']
-          return acc
-        }, {})
+        const groupedData = filteredData.reduce(
+          (acc, curr) => {
+            const year = curr.Year || ''
+            acc[year] = (acc[year] || 0) + (curr['Overall Total'] || 0)
+            return acc
+          },
+          {} as Record<string, number>,
+        )
 
-        const labels = [...new Set(data.map((d) => d.Year))]
+        const labels = [...new Set(data.map((d) => d.Year || ''))]
         const values = labels.map((year) => groupedData[year] || 0)
 
         setChartData({
@@ -104,7 +122,7 @@ const LandingPage = () => {
       }
     }
 
-    fetchData()
+    void fetchData() // Explicitly mark as ignored
   }, [selectedAgeGroup])
 
   return (
