@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import NextLink from 'next/link'
+import { roundToNearestPowerOfTen, calculateStepSize } from './helpers/chartHelpers';
 import { Box, Flex, Stack, Text, Select } from '@chakra-ui/react'
 import { Button, useIsMobile } from '@opengovsg/design-system-react'
 import {
@@ -31,45 +32,71 @@ const LandingPage = () => {
   const isMobile = useIsMobile()
   const [chartData, setChartData] = useState<any>(null)
   const [selectedAgeGroup, setSelectedAgeGroup] = useState('All')
-
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('/teachers_age_data_2019_2023_cleaned.csv')
-      const csvText = await response.text()
-      const parsed = Papa.parse(csvText, { header: true })
-      const data = parsed.data
-
-      // Convert data to chart.js format
-      const filteredData = data.filter((d: any) => {
-        return selectedAgeGroup === 'All' || d['Age Group'] === selectedAgeGroup
-      })
-
-      const groupedData = filteredData.reduce((acc: any, curr: any) => {
-        const year = curr.Year
-        acc[year] = (acc[year] || 0) + parseInt(curr['Overall Total'], 10)
-        return acc
-      }, {})
-
-      const labels = [...new Set(data.map((d: any) => d.Year))]
-      const values = labels.map((year) => groupedData[year] || 0)
-
-      setChartData({
-        labels,
-        datasets: [
-          {
-            label: selectedAgeGroup === 'All' ? 'All Age Groups' : selectedAgeGroup,
-            data: values,
-            backgroundColor: 'rgba(75, 192, 192, 0.5)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1,
-          },
-        ],
-      })
-    }
-
-    fetchData()
-  }, [selectedAgeGroup])
-
+      try {
+        const response = await fetch('/data/teachers_age_data_2019_2023.csv'); // Corrected path
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const csvText = await response.text();
+        const parsed = Papa.parse(csvText, { header: true });
+        const data = parsed.data.map((row) => {
+          // Helper function to safely parse numbers
+          const safeParse = (value) => {
+            return value && typeof value === 'string' ? parseInt(value.replace(/,/g, ''), 10) : 0;
+          };
+  
+          // Remove commas and convert numeric columns to numbers
+          return {
+            ...row,
+            'Primary Total': safeParse(row['Primary Total']),
+            'Primary Female': safeParse(row['Primary Female']),
+            'Secondary Total': safeParse(row['Secondary Total']),
+            'Secondary Female': safeParse(row['Secondary Female']),
+            'Pre-University Total': safeParse(row['Pre-University Total']),
+            'Pre-University Female': safeParse(row['Pre-University Female']),
+            'Overall Total': safeParse(row['Overall Total']),
+            'Overall Female': safeParse(row['Overall Female']),
+          };
+        });
+  
+        console.log("Parsed Data:", data); // Debugging output
+  
+        // Rest of the processing logic
+        const filteredData = data.filter((d) => {
+          return selectedAgeGroup === 'All' || d['Age Group'] === selectedAgeGroup;
+        });
+  
+        const groupedData = filteredData.reduce((acc, curr) => {
+          const year = curr.Year;
+          acc[year] = (acc[year] || 0) + curr['Overall Total'];
+          return acc;
+        }, {});
+  
+        const labels = [...new Set(data.map((d) => d.Year))];
+        const values = labels.map((year) => groupedData[year] || 0);
+  
+        setChartData({
+          labels,
+          datasets: [
+            {
+              label: selectedAgeGroup === 'All' ? 'All Age Groups' : selectedAgeGroup,
+              data: values,
+              backgroundColor: 'rgba(75, 192, 192, 0.5)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1,
+            },
+          ],
+        });
+      } catch (error) {
+        console.error("Error fetching or processing data:", error);
+      }
+    };
+  
+    fetchData();
+  }, [selectedAgeGroup]);
+  
   return (
     <>
       <AppPublicHeader />
@@ -91,72 +118,77 @@ const LandingPage = () => {
               </Text>
             </Text>
             <SectionBodyText mt="1rem">
-              EduEDA is your go-to platform for exploring education data, uncovering insights, and empowering decision-making through interactive visualizations.
+              Uncover insights, and empower decision-making through interactive visualizations
             </SectionBodyText>
             <Box mt="2.5rem">
               <Button isFullWidth={isMobile} as={NextLink} href={SIGN_IN}>
-                Start Exploring
+                Join waitlist
               </Button>
             </Box>
           </Flex>
         </Stack>
       </LandingSection>
       <LandingSection>
-        <SectionHeadingText>Interactive Visualizations</SectionHeadingText>
-        <Box mt="2rem" textAlign="center">
-          <Text mb="1rem" fontWeight="bold">Select Age Group:</Text>
-          <Select
-            value={selectedAgeGroup}
-            onChange={(e) => setSelectedAgeGroup(e.target.value)}
-            width="300px"
-            mx="auto"
-            mb="2rem"
-          >
-            {['All', '24 and below', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55 and above'].map(
-              (ageGroup) => (
-                <option key={ageGroup} value={ageGroup}>
-                  {ageGroup}
-                </option>
-              )
-            )}
-          </Select>
-          {chartData ? (
-            <Bar
-              data={chartData}
-              options={{
-                responsive: true,
-                plugins: {
-                  legend: { position: 'top' },
-                  title: {
-                    display: true,
-                    text: `Teachers' Overall Numbers (${selectedAgeGroup})`,
-                  },
-                },
-                scales: {
-                  x: {
-                    title: {
-                      display: true,
-                      text: 'Year',
-                    },
-                  },
-                  y: {
-                    beginAtZero: true,
-                    max: 5000,
-                    ticks: {
-                      stepSize: 1000,
-                    },
-                    title: {
-                      display: true,
-                      text: 'Number of Teachers',
-                    },
-                  },
-                },
-              }}
-            />
-          ) : (
-            <Text>Loading chart...</Text>
-          )}
-        </Box>
+        <SectionHeadingText>Teacher Strength</SectionHeadingText>
+        <SectionBodyText>How has the number of teachers changed from 2019 to 2023?</SectionBodyText>
+ <Box
+  mt="2rem"
+  textAlign="center"
+>
+  <Text mb="1rem" fontWeight="bold">Select Age Group</Text>
+  <Select
+    value={selectedAgeGroup}
+    onChange={(e) => setSelectedAgeGroup(e.target.value)}
+    width="200px"
+    mx="auto"
+    mb="2rem"
+  >
+    {['All', '24 and below', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55 and above'].map(
+      (ageGroup) => (
+        <option key={ageGroup} value={ageGroup}>
+          {ageGroup}
+        </option>
+      )
+    )}
+    </Select>
+    {chartData ? (
+      <Bar
+        data={chartData}
+        options={{
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' },
+            title: {
+              display: true,
+              text: `Teachers' Overall Numbers (${selectedAgeGroup})`,
+            },
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Year',
+              },
+            },
+            y: {
+              beginAtZero: true,
+              max: roundToNearestPowerOfTen(Math.max(...chartData.datasets[0].data)),
+              ticks: {
+                stepSize: calculateStepSize(Math.max(...chartData.datasets[0].data)),
+              },
+              title: {
+                display: true,
+                text: 'Number of Teachers',
+              },
+            },
+          },
+        }}
+      />
+    ) : (
+      <Text>Loading chart...</Text>
+    )}
+  </Box>
+
       </LandingSection>
       <LandingSection bg="base.content.strong" align="center">
         <OgpLogo aria-hidden w="3.5rem" h="3.5rem" color="blue.500" />
