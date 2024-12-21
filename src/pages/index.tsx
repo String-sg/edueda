@@ -23,11 +23,11 @@ import {
   SectionBodyText,
   SectionHeadingText,
 } from '~/features/landing/components'
-import { SIGN_IN } from '~/lib/routes'
 import {
   calculateStepSize,
   roundToNearestPowerOfTen,
-} from './helpers/chartHelpers'
+} from '~/helpers/chartHelpers'
+import { SIGN_IN } from '~/lib/routes'
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
