@@ -2,7 +2,11 @@ import { createEmailSchema } from '@opengovsg/starter-kitty-validators/email'
 import isEmail from 'validator/lib/isEmail'
 
 const emailSchema = createEmailSchema({
-  domains: [{ domain: 'gov.sg', includeSubdomains: true }],
+  domains: [
+    { domain: 'moe.edu.sg', includeSubdomains: false },
+    { domain: 'schools.gov.sg', includeSubdomains: false },
+    { domain: 'gov.sg', includeSubdomains: true },
+  ],
 })
 
 /**

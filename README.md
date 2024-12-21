@@ -1,4 +1,4 @@
-# Starter Kit
+# Edueda
 
 A technical kit to quickly build new products from
 [Open Government Products](https://open.gov.sg), Singapore.

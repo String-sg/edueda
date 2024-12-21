@@ -16,7 +16,7 @@ const Home: NextPageWithLayout = () => {
           <Text textStyle="responsive-display.heavy-1280" as="h1">
             Building with{' '}
             <Text as="span" color="interaction.main.default">
-              Starter Kit
+              Edueda
             </Text>
           </Text>
           <Text textStyle="body-1">
