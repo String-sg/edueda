@@ -1,6 +1,6 @@
-# Edueda
+# EduEDA
 
-A technical kit to quickly build new products from
+Worked off boilerplate starter kit from
 [Open Government Products](https://open.gov.sg), Singapore.
 
 ## Features
