@@ -18,7 +18,7 @@ const client = z.object({
   NEXT_PUBLIC_ENABLE_STORAGE: coerceBoolean.default('false'),
   NEXT_PUBLIC_ENABLE_SGID: coerceBoolean.default('false'),
   NEXT_PUBLIC_APP_URL: z.string().url().optional(),
-  NEXT_PUBLIC_APP_NAME: z.string().default('Starter Kit'),
+  NEXT_PUBLIC_APP_NAME: z.string().default('EduEDA'),
   NEXT_PUBLIC_APP_VERSION: z.string().default('0.0.0'),
 })
 

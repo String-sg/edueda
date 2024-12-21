@@ -47,7 +47,7 @@ const trpc = createTRPCReact<AppRouter>()
 const StorybookEnvDecorator: Decorator = (story) => {
   const mockEnv: EnvContextReturn['env'] = merge(
     {
-      NEXT_PUBLIC_APP_NAME: 'Edueda',
+      NEXT_PUBLIC_APP_NAME: 'EduEDA',
       NEXT_PUBLIC_APP_VERSION: 'Storybook',
       NEXT_PUBLIC_ENABLE_SGID: false,
       NEXT_PUBLIC_ENABLE_STORAGE: false,

@@ -71,7 +71,7 @@ export const AppPublicHeader = ({
         align="center"
         py={{ base: '0.625rem', md: '4.5rem' }}
       >
-        <NextLink href="/">Edueda</NextLink>
+        <NextLink href="/">EduEDA</NextLink>
         <HStack
           textStyle="subhead-1"
           spacing={{ base: '1rem', md: '2rem', xl: '2.5rem' }}
