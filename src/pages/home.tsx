@@ -1,23 +1,23 @@
-import Link from 'next/link'
 import { useState } from 'react'
+import Link from 'next/link'
 import {
-  Flex,
-  Stack,
-  Text,
+  Box,
   Button,
+  Flex,
   Input,
   Select,
-  Box,
+  Stack,
   Table,
-  Thead,
   Tbody,
-  Tr,
-  Th,
   Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
 } from '@chakra-ui/react'
+import { Attachment } from '@opengovsg/design-system-react'
 
 import { APP_GRID_COLUMN, APP_PX } from '~/constants/layouts'
-import { StarterKitSvgr } from '~/features/home/components/StarterKitSvgr'
 import { type NextPageWithLayout } from '~/lib/types'
 import { AppGrid } from '~/templates/AppGrid'
 import { AdminLayout } from '~/templates/layouts/AdminLayout'
@@ -33,7 +33,6 @@ const Home: NextPageWithLayout = () => {
     setCsvFile(file)
   }
 
-  // Submit the CSV file to the backend
   const handleUpload = async () => {
     if (!csvFile) {
       alert('Please upload a CSV file')
@@ -44,7 +43,7 @@ const Home: NextPageWithLayout = () => {
     formData.append('file', csvFile)
 
     try {
-      const res = await fetch('/api/upload-student-birthdays', {
+      const res = await fetch('/api/birthdays/upload', {
         method: 'POST',
         body: formData,
       })
@@ -62,10 +61,9 @@ const Home: NextPageWithLayout = () => {
     }
   }
 
-  // Fetch birthdays based on the selected filter
   const fetchBirthdays = async () => {
     try {
-      const res = await fetch(`/api/get-student-birthdays?filter=${filter}`)
+      const res = await fetch(`/api/birthdays/get?filter=${filter}`)
       const data = await res.json()
       setBirthdays(data)
     } catch (err) {
@@ -74,12 +72,11 @@ const Home: NextPageWithLayout = () => {
     }
   }
 
-  // Handle delete/purge data
   const handleDelete = async () => {
     if (!confirm('Are you sure you want to delete all birthday data?')) return
 
     try {
-      const res = await fetch('/api/delete-student-birthdays', { method: 'DELETE' })
+      const res = await fetch('/api/birthdays/delete', { method: 'DELETE' })
       if (res.ok) {
         alert('All data deleted successfully!')
         setBirthdays([]) // Reset the displayed data
@@ -91,60 +88,64 @@ const Home: NextPageWithLayout = () => {
       alert('Failed to delete data.')
     }
   }
-
   return (
-    <AppGrid flex={1} bg="white" px={APP_PX} textAlign="center">
-      {/* Existing Waitlist Section */}
-      <Flex py="3rem" gridColumn={APP_GRID_COLUMN} justify="center" my="auto">
+    <AppGrid
+      flex={1}
+      bg="white"
+      px={APP_PX}
+      textAlign="center"
+      templateColumns="1fr" // Ensure single-column layout
+    >
+      {/* Introduction Section */}
+      <Box gridColumn="1 / -1" py="3rem">
         <Stack align="center" gap="1.25rem">
           <Text textStyle="responsive-display.heavy-1280" as="h1">
-            You are on the waitlist for{' '}
+            Welcome to{' '}
             <Text as="span" color="interaction.main.default">
               EduEDA
             </Text>
           </Text>
           <Text textStyle="body-1">
-            You will receive an email once we have more features/releases. Check
-            out our repositories:
-            <Link
-              href="https://github.com/String-sg/education-digest-eda"
-              isExternal
-            >
-              education raw data
-            </Link>
-            and
-            <Link href="https://github.com/String-sg/eduEDA" isExternal>
-              code for this web-application
-            </Link>
-            .
+            Start with an introductory tool:{' '}
+            <b>Birthdays</b> or explore other data. <br></br>
           </Text>
-
-          <Button as={Link} href="https://string.beta.gov.sg" target="_blank">
-            See other String products
-          </Button>
-          <StarterKitSvgr />
         </Stack>
-      </Flex>
+      </Box>
 
-      {/* New Student Birthday Management Section */}
-      <Box bg="gray.100" p={6} borderRadius="md" mt={8}>
+      {/* Birthday Management Section */}
+      <Box
+        bg="gray.100"
+        p={6}
+        borderRadius="md"
+        gridColumn="1 / -1"
+        maxWidth="200rem" // Correct property and value
+        mx="auto" // Center the box horizontally
+      >
         <Text as="h2" fontSize="xl" fontWeight="bold" mb={4}>
-          Manage Student Birthdays (Beta)
+        🎉 Manage Student Birthdays
         </Text>
-
-        {/* Upload CSV */}
+        <Text textStyle="body-1">
+            You can opt in to receive email notifications to facilitate
+            planning, or import this into your calendar of choice.
+          </Text>
+          <Text textStyle="body-1">
+            <b>You own this data</b> and can delete it anytime.
+          </Text>
         <Stack spacing={4}>
-          <Input type="file" onChange={handleFileUpload} />
-          <Button colorScheme="blue" onClick={handleUpload}>
-            Upload CSV
-          </Button>
-
+          {/* Upload CSV */}
+          <Attachment
+            onFilesSelected={handleFileUpload}
+            accept="text/csv"
+            hint="Upload a CSV file with columns: name, class, birthday (DD/MM)"
+            isRequired
+          />
           {/* Filter Birthdays */}
           <Select
             placeholder="Select a filter"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
           >
+            <option value="today">Today</option>
             <option value="week">This Week</option>
             <option value="month">This Month</option>
             <option value="term">This Term</option>
@@ -180,6 +181,20 @@ const Home: NextPageWithLayout = () => {
             Delete All Data
           </Button>
         </Stack>
+      </Box>
+
+      {/* Advanced Features Section */}
+      <Box gridColumn="1 / -1" mt={8}>
+        <Text textStyle="body-1" color="gray.600">
+          Interested to contribute?<br></br>
+          <Link
+            href="https://github.com/String-sg/eduEDA"
+            isExternal
+            color="interaction.main.default"
+          >
+            See GitHub
+          </Link>{' '}
+        </Text>
       </Box>
     </AppGrid>
   )
