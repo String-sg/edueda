@@ -1,0 +1,25 @@
+What an exciting topic! Here are some engaging, higher-order thinking questions related to balancing chemical equations, along with some interdisciplinary connections:
+
+**Chemistry Only**
+
+1. Predict the products of a combustion reaction where methanol (CH3OH) reacts with oxygen (O2). Write the balanced equation.
+2. A mixture of iron (III) oxide and carbon is heated in a blast furnace. What products form, and what is the balanced equation for the reaction?
+3. Consider the Law of Conservation of Mass. How can you use balancing equations to demonstrate this law?
+4. What is the relationship between the coefficients in a balanced equation and the amount of substance formed/required?
+5. Suppose you have the unbalanced equation C2H6 + O2 → CO2 + H2O. How would you use the Law of Conservation of Mass to determine the correct coefficients?
+
+**Interdisciplinary Connections**
+
+1. **Environmental Science**: Ammonia (NH3) is often used in fertilizers. However, its application contributes to ammonia-rich groundwater contamination. How could balancing equations help in understanding the impact of ammonia emissions on aquatic ecosystems?
+2. **Physics**: Suppose a perfectly insulated container hosts a reaction: N2 + O2 → 2NO2. How would the initial temperature of reactants influence the equilibrium concentrations of NO2 and N2, assuming a temperature-dependent reaction rate?
+3. **Architecture/Biochem**: The steel reinforcement used in concrete is produced from iron ore (FeO3) through the blast furnace process. Describe how balancing equations are applied in this context. What are potential implications of an imbalanced equation on structural integrity?
+4. **Health and Nutrition**: Common cooking gas (methane, CH4) ignites C in a cooking stove, releasing carbon dioxide and water vapor. Write the balanced equation and identify the total mass change.
+5. **Societal Impact**: In manufacturing stainless steel (a popular material used in medical equipment and aerospace), chromium tacks (Cr) react with oxygen and carbon. Connect the unbalanced equation to broader issues like industrial carbon footprint and energy consumption.
+
+**Connection to Historical or Contemporary Problems**
+
+1. **Historical context**: Copper extraction involves reacting copper ore with oxygen (Cu2O and O2). Link the balanced equation to significant developments in metallurgy.
+2. **Energy crisis and Climate Change**: Describe the balancing equations involved in solar panel usage and production of high-efficiency photocells (their efficiency relies on accurate chemical reactions).
+3. **Synthetic Biology and Genomics**: Considering the concept of balanced chemical reactions, how do metabolic pathways interlink living cells with contemporary biotech's quest for artificial self-sustaining units?
+
+Feel free to pick and choose based on your specific needs and allow your students to dive deep into chemistry's practical applications and connections to real-world issues!
