@@ -165,9 +165,9 @@ const LandingPage = () => {
         </Stack>
       </LandingSection>
       <LandingSection>
-        <SectionHeadingText>Teacher Strength</SectionHeadingText>
+        <SectionHeadingText>Teacher Numbers</SectionHeadingText>
         <SectionBodyText>
-          How has the number of teachers changed from 2019 to 2023?
+          How has the number of teachers changed from 2011 to 2023?
         </SectionBodyText>
         <Box mt="2rem" textAlign="center">
           <Text mb="1rem" fontWeight="bold">
